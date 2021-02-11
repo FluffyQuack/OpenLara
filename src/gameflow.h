@@ -8,6 +8,14 @@
 
 namespace TR {
 
+    //Fluffy: Various options which can be set via command line:
+    bool options_1PaltCostume = 0;
+    bool options_2PaltCostume = 0;
+    bool options_1PnoBraid = 0;
+    bool options_2PnoBraid = 0;
+    int options_1PbraidStyle = -1;
+    int options_2PbraidStyle = -1;
+
     bool useEasyStart;
     bool isGameEnded;
 
