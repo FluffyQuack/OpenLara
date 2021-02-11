@@ -19,6 +19,14 @@
 #define TR3_TYPES_START       2000
 #define TR4_TYPES_START       3000
 
+/* Fluffy: These were added by me for alternate costume support:
+    E( LARA_2P               ) \
+    E( LARA_PISTOLS_2P       ) \
+    E( LARA_SHOTGUN_2P       ) \
+    E( LARA_MAGNUMS_2P       ) \
+    E( LARA_UZIS_2P          ) \
+    E( LARA_SPEC_2P          ) \
+*/
 
 #define TR_TYPES(E) \
     E( LARA                  = TR1_TYPES_START) \
@@ -212,6 +220,12 @@
     E( UNUSED_22             ) \
     E( LARA_BRAID            ) \
     E( GLYPHS                ) \
+    E( LARA_2P               ) \
+    E( LARA_PISTOLS_2P       ) \
+    E( LARA_SHOTGUN_2P       ) \
+    E( LARA_MAGNUMS_2P       ) \
+    E( LARA_UZIS_2P          ) \
+    E( LARA_SPEC_2P          ) \
     E( TR1_TYPE_MAX          ) \
     E( _LARA                 = TR2_TYPES_START ) \
     E( _LARA_PISTOLS         ) \
@@ -3071,24 +3085,28 @@ namespace TR {
                 switch (type) {
                 // pistols
                     case Entity::LARA_PISTOLS      :
+                    case Entity::LARA_PISTOLS_2P   : //Fluffy
                     case Entity::INV_PISTOLS       : 
                     case Entity::INV_AMMO_PISTOLS  : 
                     case Entity::AMMO_PISTOLS      : 
                     case Entity::PISTOLS           : return  0;
                 // shotgun
                     case Entity::LARA_SHOTGUN      :
+                    case Entity::LARA_SHOTGUN_2P   : //Fluffy
                     case Entity::INV_SHOTGUN       :
                     case Entity::INV_AMMO_SHOTGUN  : 
                     case Entity::AMMO_SHOTGUN      : 
                     case Entity::SHOTGUN           : return  1;
                 // magnums
                     case Entity::LARA_MAGNUMS      :
+                    case Entity::LARA_MAGNUMS_2P   : //Fluffy
                     case Entity::INV_MAGNUMS       :
                     case Entity::INV_AMMO_MAGNUMS  : 
                     case Entity::AMMO_MAGNUMS      : 
                     case Entity::MAGNUMS           : return  2;
                 // uzis
                     case Entity::LARA_UZIS         :
+                    case Entity::LARA_UZIS_2P      : //Fluffy
                     case Entity::INV_UZIS          :
                     case Entity::INV_AMMO_UZIS     : 
                     case Entity::AMMO_UZIS         : 
@@ -3110,6 +3128,7 @@ namespace TR {
             int16 smoke;
             int16 waterSplash;
             int16 glyphs;
+            int16 player2PmodelIndex; //Fluffy: Model index for Lara 2P (the next 5 entities in the model array after this are lara pistols, lara shotgun, lara magnum, lara uzis, and lara spec)
 
             struct Weapon {
                 int16 items[MAX_WEAPONS];
@@ -4875,6 +4894,8 @@ namespace TR {
                     case Entity::LARA_MAGNUMS        :
                     case Entity::LARA_UZIS           : extra.weapons[type]     = i; break;
 
+                    case Entity::LARA_2P             : extra.player2PmodelIndex = i; break; //Fluffy
+
                     case Entity::INV_PISTOLS         :
                     case Entity::INV_SHOTGUN         :
                     case Entity::INV_MAGNUMS         :
@@ -6260,6 +6281,7 @@ namespace TR {
             }
 
         // remove unavailable sprites (check EGYPT.PHD)
+            /* //Fluffy: Commented this out since it triggered an assert when using  alt costumes. TODO: Is there any downside to removing this code?
             for (int roomIndex = 0; roomIndex < roomsCount; roomIndex++) {
                 Room::Data &data = rooms[roomIndex].data;
                 
@@ -6277,6 +6299,7 @@ namespace TR {
                     data.sprites = NULL;
                 }
             }
+            */
         }
 
         void readAnimTex(Stream &stream) {
