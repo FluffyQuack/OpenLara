@@ -520,8 +520,35 @@ namespace TR {
         return VER_UNKNOWN;
     }
 
-    LevelID getLevelID(int size, const char *name, Version &version, bool &isDemoLevel) {
-        isDemoLevel = false;
+    LevelID getLevelID(int size, const char *name, Version &version, bool &isAltLvlFormat) {
+        isAltLvlFormat = false;
+
+        // get extension name
+        char buf[255];
+        char* ext = NULL;
+        if (name)
+        {
+            // skip directory path
+            int start = 0;
+            for (int i = int(strlen(name)) - 1; i >= 0; i--)
+                if (name[i] == '/' || name[i] == '\\') {
+                    start = i + 1;
+                    break;
+                }
+            // file extension
+            strcpy(buf, name + start);
+            for (int i = 0; i < int(strlen(buf)); i++)
+                if (buf[i] == '.') {
+                    buf[i] = 0;
+                    ext = buf + i + 1;
+                    break;
+                }
+
+            // "tub" extension means Unfinished Business levels which uses the same level format as TR1 demo
+            if (tolower(ext[0]) == 't' && tolower(ext[1]) == 'u' && tolower(ext[2]) == 'b')
+                isAltLvlFormat = true;
+        }
+
         switch (size) {
         // TR1
             // TITLE
@@ -549,7 +576,7 @@ namespace TR {
             case 2533312 :
             case 2533634 : return LVL_TR1_1;
             // LEVEL2
-            case 2873406 : isDemoLevel = true; return LVL_TR1_2;
+            case 2873406 : isAltLvlFormat = true; return LVL_TR1_2;
             case 1766352 : // PSX JAP
             case 1535734 : version = VER_TR1_PSX;
             case 532250  : // SAT
@@ -950,23 +977,6 @@ namespace TR {
         }
 
         if (name) {
-            // skip directory path
-            int start = 0;
-            for (int i = int(strlen(name)) - 1; i >= 0; i--)
-                if (name[i] == '/' || name[i] == '\\') {
-                    start = i + 1;
-                    break;
-                }
-            // skip file extension
-            char buf[255];
-            strcpy(buf, name + start);
-            char *ext = NULL;
-            for (int i = 0; i < int(strlen(buf)); i++)
-                if (buf[i] == '.') {
-                    buf[i] = 0;
-                    ext = buf + i + 1;
-                    break;
-                }
             // compare with standard levels
             // TODO: fix TITLE (2-3), HOUSE (3), CUTx (2-3)
             for (int i = 0; i < LVL_MAX; i++)
