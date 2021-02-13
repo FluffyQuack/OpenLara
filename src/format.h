@@ -3072,7 +3072,7 @@ namespace TR {
 
         int     cutEntity;
         mat4    cutMatrix;
-        bool    isDemoLevel;
+        bool    isAltLvlFormat;
         bool    simpleItems;
 
         struct Extra {
@@ -3194,7 +3194,7 @@ namespace TR {
             #define MAGIC_TR3_PSX 0xFFFFFFC8
             #define MAGIC_TR4_PC  0x00345254
 
-            id = TR::getLevelID(stream.size, stream.name, version, isDemoLevel);
+            id = TR::getLevelID(stream.size, stream.name, version, isAltLvlFormat);
 
             if (version == VER_UNKNOWN || version == VER_TR1_PC || version == VER_TR1_PSX || version == VER_TR1_SAT || version == VER_TR3_PSX) {
                 stream.read(magic);
@@ -3341,7 +3341,7 @@ namespace TR {
             readObjectTex(stream);
             readSpriteTex(stream);
 
-            if (isDemoLevel) {
+            if (isAltLvlFormat) {
                 stream.read(palette, 256);
             }
 
@@ -3354,7 +3354,7 @@ namespace TR {
             readEntities(stream);
             readLightMap(stream);
             
-            if (!isDemoLevel) {
+            if (!isAltLvlFormat) {
                 stream.read(palette, 256);
             }
 
