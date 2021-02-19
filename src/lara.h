@@ -1098,7 +1098,7 @@ struct Lara : Character {
             }
             Arm *arm = &arms[armIndex];
 
-            if (wpnAmmo && *wpnAmmo != UNLIMITED_AMMO) {
+            if (wpnAmmo && *wpnAmmo != UNLIMITED_AMMO && TR::options_unlimitedAmmo == 0) { //Fluffy
                 if (*wpnAmmo <= 0)
                     continue;
                 if (wpnCurrent != TR::Entity::SHOTGUN)
@@ -1144,7 +1144,7 @@ struct Lara : Character {
             if (shots != hits)
                 game->playSound(TR::SND_RICOCHET, nearPos, Sound::PAN);
 
-             if (wpnAmmo && *wpnAmmo != UNLIMITED_AMMO && wpnCurrent == TR::Entity::SHOTGUN)
+             if (wpnAmmo && *wpnAmmo != UNLIMITED_AMMO && wpnCurrent == TR::Entity::SHOTGUN && TR::options_unlimitedAmmo == 0) //Fluffy
                 *wpnAmmo -= 1;
         }
     }
@@ -1328,7 +1328,7 @@ struct Lara : Character {
         updateTargets();
 
         Controller *lookTarget = canLookAt() ? target : NULL;
-        if (camera->mode == Camera::MODE_LOOK) {
+        if (camera->mode == Camera::MODE_LOOK || (TR::options_rightstickLook && (camera->lookAngle.x < -0.001 || camera->lookAngle.x > 0.001 || camera->lookAngle.y < -0.001 || camera->lookAngle.y > 0.001))) { //Fluffy: If options_rightstickLook is true, then Lara should always look towards targetAngle (assuming targetangle isn't zero)
             vec3 p = pos + vec3(camera->targetAngle.x, camera->targetAngle.y) * 8192.0f;
             Character::lookAtPos(&p);
         } else

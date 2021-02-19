@@ -1047,6 +1047,12 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
                         i++;
                     }
                 }
+                else if (strcmp(argv[i], "--lookrightstick") == 0)
+                    TR::options_rightstickLook = 1;
+                else if (strcmp(argv[i], "--lookinvert") == 0)
+                    TR::options_invertLook = 1;
+                else if (strcmp(argv[i], "--unlimitedammo") == 0)
+                    TR::options_unlimitedAmmo = 1;
             }
             else
             {
@@ -1125,6 +1131,12 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
                         i++;
                     }
                 }
+                else if (strcmp(arg, "--lookrightstick") == 0)
+                    TR::options_rightstickLook = 1;
+                else if (strcmp(arg, "--lookinvert") == 0)
+                    TR::options_invertLook = 1;
+                else if (strcmp(arg, "--unlimitedammo") == 0)
+                    TR::options_unlimitedAmmo = 1;
             }
             else
             {

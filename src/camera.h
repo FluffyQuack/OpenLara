@@ -328,8 +328,10 @@ struct Camera : ICamera {
 
     void move(const TR::Location &to) {
         float t = (smooth && speed) ? (30.0f / speed * Core::deltaTime) : 1.0f;
-        if (mode == MODE_LOOK)
+        if (mode == MODE_LOOK) //If true, then camera snaps more quickly to where Lara is looking
             t = 20.0f * Core::deltaTime;
+        else if(TR::options_rightstickLook && (lookAngle.x < -0.001 || lookAngle.x > 0.001 || lookAngle.y < -0.001 || lookAngle.y > 0.001)) //Fluffy: If options_rightstickLook is true, then we move camera relatively fast when lookAngle isn't zero
+            t = 5.0f * Core::deltaTime;
 
         eye.pos  = eye.pos.lerp(to.pos, t);
         eye.room = to.room;
@@ -418,10 +420,18 @@ struct Camera : ICamera {
                 if (mode == MODE_LOOK) {
                     float d = 3.0f * Core::deltaTime;
 
-                    vec2 L = Input::joy[cameraIndex].L;
+                    vec2 L;
+                    if (TR::options_rightstickLook) //Fluffy: If true, we use right stick for the look camera
+                        L = Input::joy[cameraIndex].R;
+                    else
+                        L = Input::joy[cameraIndex].L;
                     L = L.normal() * max(0.0f, L.length() - INPUT_JOY_DZ_STICK) / (1.0f - INPUT_JOY_DZ_STICK);
 
-                    lookAngle.x += L.y * d;
+                    float stickY = L.y;
+                    if (TR::options_invertLook) //Fluffy: If true, we invert vertical camera movement
+                        stickY = -stickY;
+
+                    lookAngle.x += stickY * d;
                     lookAngle.y += L.x * d;
 
                     if (Input::state[cameraIndex][cUp])    lookAngle.x -= d;
@@ -429,10 +439,24 @@ struct Camera : ICamera {
                     if (Input::state[cameraIndex][cLeft])  lookAngle.y -= d;
                     if (Input::state[cameraIndex][cRight]) lookAngle.y += d;
 
-                    lookAngle.x = clamp(lookAngle.x,  CAM_LOOK_ANGLE_XMIN, CAM_LOOK_ANGLE_XMAX);
-                    lookAngle.y = clamp(lookAngle.y, -CAM_LOOK_ANGLE_Y,    CAM_LOOK_ANGLE_Y);
-                } else
-                    if (lookAngle.x != CAM_FOLLOW_ANGLE || lookAngle.y != 0.0f) {
+                    lookAngle.x = clamp(lookAngle.x, CAM_LOOK_ANGLE_XMIN, CAM_LOOK_ANGLE_XMAX);
+                    lookAngle.y = clamp(lookAngle.y, -CAM_LOOK_ANGLE_Y, CAM_LOOK_ANGLE_Y);
+                }
+                else if (TR::options_rightstickLook) //Fluffy: If true, we can look around at any time
+                {
+                    vec2 L = Input::joy[cameraIndex].R;
+                    L = L.normal() * max(0.0f, L.length() - INPUT_JOY_DZ_STICK) / (1.0f - INPUT_JOY_DZ_STICK);
+
+                    float stickY = L.y;
+                    if (TR::options_invertLook) //Fluffy: If true, we invert vertical camera movement
+                        stickY = -stickY;
+
+                    lookAngle.x = -L.y * 1.40;
+                    lookAngle.y = L.x * 1.40;
+
+                    lookAngle.x = clamp(lookAngle.x, CAM_LOOK_ANGLE_XMIN, CAM_LOOK_ANGLE_XMAX);
+                    lookAngle.y = clamp(lookAngle.y, -CAM_LOOK_ANGLE_Y, CAM_LOOK_ANGLE_Y);
+                } else if (lookAngle.x != CAM_FOLLOW_ANGLE || lookAngle.y != 0.0f) {
                         float t = 10.0f * Core::deltaTime;
                         lookAngle.x = lerp(clampAngle(lookAngle.x), CAM_FOLLOW_ANGLE, t);
                         lookAngle.y = lerp(clampAngle(lookAngle.y), 0.0f, t);
