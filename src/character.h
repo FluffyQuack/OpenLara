@@ -32,7 +32,8 @@ struct Character : Controller {
         ACTION      = 1 << 7,
         WEAPON      = 1 << 8,
         LOOK        = 1 << 9,
-        DEATH       = 1 << 10
+        DEATH       = 1 << 10,
+        YELL        = 1 << 11, //Fluffy
     };
 
     Controller  *viewTarget;

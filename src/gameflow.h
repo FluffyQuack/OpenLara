@@ -18,6 +18,7 @@ namespace TR {
     bool options_rightstickLook = 0;
     bool options_invertLook = 0;
     bool options_unlimitedAmmo = 0;
+    bool options_friendlyFire = 0;
 
     bool useEasyStart;
     bool isGameEnded;

@@ -451,8 +451,8 @@ struct Camera : ICamera {
                     if (TR::options_invertLook) //Fluffy: If true, we invert vertical camera movement
                         stickY = -stickY;
 
-                    lookAngle.x = -L.y * 1.40;
-                    lookAngle.y = L.x * 1.40;
+                    lookAngle.x = -L.y * 1.40f;
+                    lookAngle.y = L.x * 1.40f;
 
                     lookAngle.x = clamp(lookAngle.x, CAM_LOOK_ANGLE_XMIN, CAM_LOOK_ANGLE_XMAX);
                     lookAngle.y = clamp(lookAngle.y, -CAM_LOOK_ANGLE_Y, CAM_LOOK_ANGLE_Y);
