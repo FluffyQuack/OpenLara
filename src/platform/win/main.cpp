@@ -1053,6 +1053,8 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
                     TR::options_invertLook = 1;
                 else if (strcmp(argv[i], "--unlimitedammo") == 0)
                     TR::options_unlimitedAmmo = 1;
+                else if (strcmp(argv[i], "--friendlyfire") == 0)
+                    TR::options_friendlyFire = 1;
             }
             else
             {
@@ -1137,6 +1139,8 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
                     TR::options_invertLook = 1;
                 else if (strcmp(arg, "--unlimitedammo") == 0)
                     TR::options_unlimitedAmmo = 1;
+                else if (strcmp(arg, "--friendlyfire") == 0)
+                    TR::options_friendlyFire = 1;
             }
             else
             {

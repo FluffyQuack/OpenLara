@@ -1121,7 +1121,12 @@ struct Lara : Character {
             if (arm->target && checkHit(arm->target, p, hit, hit)) {
                 hits++;
                 TR::Entity::Type type = arm->target->getEntity().type;
-                ((Character*)arm->target)->hit(wpnGetDamage(), this);
+
+                float damage = wpnGetDamage();
+                if (arm->target->getEntity().isLara()) //If we're shooting at another player, drastically increase the damage as Lara has a lot of health compared to enemies
+                    damage *= 33;
+
+                ((Character*)arm->target)->hit(damage, this);
                 hit -= d * 64.0f;
                 if (type != TR::Entity::SCION_TARGET)
                     game->addEntity(TR::Entity::BLOOD, room, hit);
@@ -1507,7 +1512,7 @@ struct Lara : Character {
 
         Controller *c = Controller::first;
         do {
-            if (!c->getEntity().isEnemy())
+            if (!(c->getEntity().isEnemy() || (c->getEntity().isLara() && TR::options_friendlyFire == 1))) //Fluffy: If friendly fire is true, then we allow Lara to target Lara
                 continue;
 
             Character *enemy = (Character*)c;
@@ -3079,6 +3084,7 @@ struct Lara : Character {
         if (Input::state[pid][cAction])    input |= ACTION;
         if (Input::state[pid][cWeapon])    input |= WEAPON;
         if (Input::state[pid][cLook] && canLookAt()) input = LOOK;
+        if (Input::state[pid][cDuck])    input |= YELL; //Fluffy
         //if (Input::state[pid][cStepRight]) input  = WALK  | RIGHT;
         //if (Input::state[pid][cStepLeft])  input  = WALK  | LEFT;
 
@@ -3277,6 +3283,9 @@ struct Lara : Character {
     virtual void update() {
         if (Input::state[camera->cameraIndex][cLook] && Input::lastState[camera->cameraIndex] == cAction)
             camera->changeView(!camera->firstPerson);
+
+        if (input & YELL)
+            game->playSound(TR::SND_SCREAM, pos, Sound::PAN | Sound::UNIQUE); //Fluffy
 
         if (level->isCutsceneLevel()) {
             updateAnimation(true);
