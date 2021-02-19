@@ -15,6 +15,9 @@ namespace TR {
     bool options_2PnoBraid = 0;
     int options_1PbraidStyle = -1;
     int options_2PbraidStyle = -1;
+    bool options_rightstickLook = 0;
+    bool options_invertLook = 0;
+    bool options_unlimitedAmmo = 0;
 
     bool useEasyStart;
     bool isGameEnded;
