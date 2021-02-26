@@ -833,6 +833,14 @@ struct Level : IGame {
             if (level.version == TR::VER_TR2_PSX) // fix for 8 kHz VAG in PSX TR2
                 pitch *= 8000.0f / 11025.0f;
 
+            if (id == TR::SND_SCREAM) { //Fluffy: Improve scream sound
+                pitch = 0.66f + (0.84f * randf()); //0.66 to 1.5 range
+                volume *= 1.5;
+                Sound::Sample* ch = Sound::getChannel(id, &pos); //If sound already exist, then use same as existing pitch
+                if (ch)
+                    pitch = ch->pitch;
+            }
+
             if (!(flags & Sound::MUSIC)) {
                 switch (b.flags.mode) {
                     case 0 : if (level.version & TR::VER_TR1) flags |= Sound::UNIQUE; break;
