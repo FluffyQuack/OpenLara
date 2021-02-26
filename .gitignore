@@ -1,0 +1,121 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/src/platform/win/Release/vcpkg.applocal.log
+/src/platform/win/Release/vc141.pdb
+/src/platform/win/Release/tinflate.obj
+/src/platform/win/Release/stb_vorbis.obj
+/src/platform/win/Release/OpenLara.vcxproj.FileListAbsolute.txt
+/src/platform/win/Release/OpenLara.res
+/src/platform/win/Release/OpenLara.log
+/src/platform/win/Release/OpenLara.tlog/rc.write.1.tlog
+/src/platform/win/Release/OpenLara.tlog/rc.read.1.tlog
+/src/platform/win/Release/OpenLara.tlog/rc.command.1.tlog
+/src/platform/win/Release/OpenLara.tlog/OpenLara.write.1u.tlog
+/src/platform/win/Release/OpenLara.tlog/OpenLara.lastbuildstate
+/src/platform/win/Release/OpenLara.tlog/link.write.1.tlog
+/src/platform/win/Release/OpenLara.tlog/link.read.1.tlog
+/src/platform/win/Release/OpenLara.tlog/link.command.1.tlog
+/src/platform/win/Release/OpenLara.tlog/CL.write.1.tlog
+/src/platform/win/Release/OpenLara.tlog/CL.read.1.tlog
+/src/platform/win/Release/OpenLara.tlog/CL.command.1.tlog
+/src/platform/win/Release/OpenLara.tlog
+/src/platform/win/Release
+/src/platform/win/Debug/vcpkg.applocal.log
+/src/platform/win/Debug/vc141.pdb
+/src/platform/win/Debug/vc141.idb
+/src/platform/win/Debug/tinflate.obj
+/src/platform/win/Debug/stb_vorbis.obj
+/src/platform/win/Debug/OpenLara.tlog/rc.write.1.tlog
+/src/platform/win/Debug/OpenLara.tlog/rc.read.1.tlog
+/src/platform/win/Debug/OpenLara.res
+/src/platform/win/Debug/OpenLara.log
+/src/platform/win/Debug/minimp3.obj
+/src/platform/win/Debug/main.obj
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CompilerIdCXX/CMakeCXXCompilerId.exe
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CompilerIdCXX/CMakeCXXCompilerId.cpp
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CompilerIdCXX
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CompilerIdC/CMakeCCompilerId.obj
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CompilerIdC/CMakeCCompilerId.exe
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CompilerIdC/CMakeCCompilerId.c
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CMakeSystem.cmake
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CMakeRCCompiler.cmake
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CMakeDetermineCompilerABI_CXX.bin
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CMakeDetermineCompilerABI_C.bin
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CMakeCXXCompiler.cmake
+/.vs/VSWorkspaceState.json
+/.vs/slnx.sqlite
+/.vs/ProjectSettings.json
+/.vs/OpenLara/v16/Browse.VC.opendb
+/.vs/OpenLara/v16/Browse.VC.db-wal
+/.vs/OpenLara/v16/Browse.VC.db-shm
+/.vs/OpenLara/v16/Browse.VC.db
+/.vs/OpenLara/v16/.suo
+/.vs/CMake Overview
+/bin/OpenLara.pdb
+/bin/OpenLara.lib
+/bin/OpenLara.ipdb
+/bin/OpenLara.iobj
+/bin/OpenLara.ilk
+/bin/OpenLara.exp
+/bin/OpenLara.exe
+/src/platform/android/app/out/build/x64-Debug (default)/.cmake/api/v1/reply/target-game-Debug-6ab445d162aaa4bf9f27.json
+/src/platform/android/app/out/build/x64-Debug (default)/.cmake/api/v1/reply/index-2021-02-11T20-00-10-0869.json
+/src/platform/android/app/out/build/x64-Debug (default)/.cmake/api/v1/reply/codemodel-v2-3f8935e23f89aa6cb3c3.json
+/src/platform/android/app/out/build/x64-Debug (default)/.cmake/api/v1/reply/cmakeFiles-v1-cc61e409bb075c777f89.json
+/src/platform/android/app/out/build/x64-Debug (default)/.cmake/api/v1/reply/cache-v2-35787ac3db2fbe76a595.json
+/src/platform/android/app/out/build/x64-Debug (default)/.cmake/api/v1/reply
+/src/platform/android/app/out/build/x64-Debug (default)/.cmake/api/v1/query/client-MicrosoftVS/query.json
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CompilerIdCXX/CMakeCXXCompilerId.obj
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CompilerIdCXX/CMakeCXXCompilerId.exe
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CompilerIdCXX/CMakeCXXCompilerId.cpp
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CompilerIdCXX
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CompilerIdC/CMakeCCompilerId.obj
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CompilerIdC/CMakeCCompilerId.exe
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CompilerIdC/CMakeCCompilerId.c
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CMakeSystem.cmake
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CMakeRCCompiler.cmake
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CMakeDetermineCompilerABI_CXX.bin
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CMakeDetermineCompilerABI_C.bin
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CMakeCXXCompiler.cmake
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CMakeCCompiler.cmake
+/src/platform/android/app/out/build/x64-Debug (default)/VSInheritEnvironments.txt
+/src/platform/android/app/out/build/x64-Debug (default)/Testing/Temporary/LastTest.log
+/src/platform/android/app/out/build/x64-Debug (default)/Testing/Temporary
+/src/platform/android/app/out/build/x64-Debug (default)/cmake_install.cmake
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/TargetDirectories.txt
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/ShowIncludes/main.obj
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/ShowIncludes/main.c
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/ShowIncludes/foo.h
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/rules.ninja
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/CMakeOutput.log
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeFiles/cmake.check_cache
+/src/platform/android/app/out/build/x64-Debug (default)/CMakeCache.txt
+/src/platform/android/app/out/build/x64-Debug (default)/build.ninja
+/src/platform/psv/out/build/x64-Debug (default)/VSInheritEnvironments.txt
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/ShowIncludes/main.obj
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/ShowIncludes/main.c
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/ShowIncludes/foo.h
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/ShowIncludes
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/CMakeOutput.log
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/cmake.check_cache
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2/CMakeCCompiler.cmake
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles/3.18.20081302-MSVC_2
+/src/platform/psv/out/build/x64-Debug (default)/CMakeFiles
+/src/platform/psv/out/build/x64-Debug (default)/CMakeCache.txt
+/src/platform/psv/out/build/x64-Debug (default)/.cmake/api/v1/query/client-MicrosoftVS/query.json
+/src/platform/win/.vs/OpenLara/v16/ipch/AutoPCH/eb3f42527dcb3b0f/MAIN.ipch
+/src/platform/win/.vs/OpenLara/v16/Browse.VC.db
+/src/platform/win/.vs/OpenLara/v16/.suo
+/src/platform/win/Debug/OpenLara.tlog/rc.command.1.tlog
+/src/platform/win/Debug/OpenLara.tlog/OpenLara.write.1u.tlog
+/src/platform/win/Debug/OpenLara.tlog/OpenLara.lastbuildstate
+/src/platform/win/Debug/OpenLara.tlog/link.write.1.tlog
+/src/platform/win/Debug/OpenLara.tlog/link.read.1.tlog
+/src/platform/win/Debug/OpenLara.tlog/link.delete.1.tlog
+/src/platform/win/Debug/OpenLara.tlog/link.command.1.tlog
+/src/platform/win/Debug/OpenLara.tlog/CL.write.1.tlog
+/src/platform/win/Debug/OpenLara.tlog/CL.read.1.tlog
+/src/platform/win/Debug/OpenLara.tlog/CL.command.1.tlog
+/src/platform/win/OpenLara.aps
