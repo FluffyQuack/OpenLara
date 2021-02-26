@@ -421,10 +421,11 @@ struct Camera : ICamera {
                     float d = 3.0f * Core::deltaTime;
 
                     vec2 L;
+                    Input::Joystick &joy = Input::joy[Core::settings.controls[cameraIndex].joyIndex];
                     if (TR::options_rightstickLook) //Fluffy: If true, we use right stick for the look camera
-                        L = Input::joy[cameraIndex].R;
+                        L = joy.R;
                     else
-                        L = Input::joy[cameraIndex].L;
+                        L = joy.L;
                     L = L.normal() * max(0.0f, L.length() - INPUT_JOY_DZ_STICK) / (1.0f - INPUT_JOY_DZ_STICK);
 
                     float stickY = L.y;
