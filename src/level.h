@@ -668,6 +668,7 @@ struct Level : IGame {
         Core::setBasis(joints, level.models[modelIndex].mCount);
         Core::active.shader->setParam(uMaterial, Core::active.material);
         Core::active.shader->setParam(uAmbient, ambient[0], 6);
+        Core::setFog(FOG_NONE);
         Core::updateLights();
         mesh->renderModel(modelIndex, underwater);
         // transparent
@@ -676,6 +677,7 @@ struct Level : IGame {
         Core::setBasis(joints, level.models[modelIndex].mCount);
         Core::active.shader->setParam(uMaterial, Core::active.material);
         Core::active.shader->setParam(uAmbient, ambient[0], 6);
+        Core::setFog(FOG_NONE);
         Core::updateLights();
         mesh->renderModel(modelIndex, underwater);
         // additive
@@ -686,6 +688,7 @@ struct Level : IGame {
         Core::setBasis(joints, level.models[modelIndex].mCount);
         Core::active.shader->setParam(uMaterial, Core::active.material);
         Core::active.shader->setParam(uAmbient, ambient[0], 6);
+        Core::setFog(FOG_NONE);
         Core::updateLights();
         mesh->renderModel(modelIndex, underwater);
         Core::setDepthWrite(true);
@@ -829,6 +832,14 @@ struct Level : IGame {
 
             if (level.version == TR::VER_TR2_PSX) // fix for 8 kHz VAG in PSX TR2
                 pitch *= 8000.0f / 11025.0f;
+
+            if (id == TR::SND_SCREAM) { //Fluffy: Improve scream sound
+                pitch = 0.66f + (0.84f * randf()); //0.66 to 1.5 range
+                volume *= 1.5;
+                Sound::Sample* ch = Sound::getChannel(id, &pos); //If sound already exist, then use same as existing pitch
+                if (ch)
+                    pitch = ch->pitch;
+            }
 
             if (!(flags & Sound::MUSIC)) {
                 switch (b.flags.mode) {
@@ -1086,14 +1097,6 @@ struct Level : IGame {
         Lara *lead = players[index ^ 1];
         if (!lead) return;
 
-        Controller *c = Controller::first;
-        while (c) {
-            Controller *next = c->next;
-            if (c->getEntity().type == TR::Entity::FLAME && ((Flame*)c)->owner == players[index])
-                removeEntity(c);
-            c = next;
-        }
-
         players[index]->reset(lead->getRoomIndex(), lead->pos, lead->angle.y, lead->stand);
     }
 
@@ -1106,6 +1109,15 @@ struct Level : IGame {
                 }
             }
         }
+
+        Controller *c = Controller::first;
+        while (c) {
+            Controller *next = c->next;
+            if (c->getEntity().type == TR::Entity::FLAME && ((Flame*)c)->owner == players[index])
+                removeEntity(c);
+            c = next;
+        }
+
         removeEntity(players[index]);
         players[index] = NULL;
     }
@@ -2728,7 +2740,7 @@ struct Level : IGame {
         if (GAPI::getProjRange() == mat4::PROJ_ZERO_POS)
             bias = mat4(
                 0.5f, 0.0f, 0.0f, 0.0f,
-                0.0f,-0.5f, 0.0f, 0.0f,
+                0.0f, 0.5f, 0.0f, 0.0f,
                 0.0f, 0.0f, 1.0f, 0.0f,
                 0.5f, 0.5f, 0.0f, 1.0f
             );
@@ -2740,6 +2752,10 @@ struct Level : IGame {
                 0.5f, 0.5f, 0.5f, 1.0f
             );
         }
+
+    #if defined(_GAPI_D3D8) || defined(_GAPI_D3D9) || defined(_GAPI_D3D11) || defined(_GAPI_GXM)
+        bias.e11 = -bias.e11; // vertical flip for UVs
+    #endif
 
         m = bias * m;
 
@@ -2996,7 +3012,7 @@ struct Level : IGame {
             Core::setDepthTest(false);
             Core::validateRenderState();
         //    Debug::Level::rooms(level, lara->pos, lara->getEntity().room);
-        //     Debug::Level::lights(level, player->getRoomIndex(), player);
+        //    Debug::Level::lights(level, player->getRoomIndex(), player);
         //    Debug::Level::sectors(this, players[0]->getRoomIndex(), (int)players[0]->pos.y);
         //    Core::setDepthTest(false);
         //    Debug::Level::portals(level);

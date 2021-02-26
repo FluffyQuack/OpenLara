@@ -308,15 +308,15 @@ void touchUpdate(HWND hWnd, HTOUCHINPUT hTouch, int count) {
 }
 
 // sound
-#define SND_SIZE 4704*2
+#define SND_SIZE (2352*3*2)
 
 bool sndReady;
 char *sndData;
 HWAVEOUT waveOut;
 WAVEFORMATEX waveFmt = { WAVE_FORMAT_PCM, 2, 44100, 44100 * 4, 4, 16, sizeof(waveFmt) };
 WAVEHDR waveBuf[2];
-HANDLE  sndThread;
-HANDLE  sndSema;
+HANDLE sndThread;
+HANDLE sndSema;
 
 void sndFree() {
     if (!sndReady) return;
@@ -1000,7 +1000,166 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     strcpy(saveDir, cacheDir);
     CreateDirectory(cacheDir, NULL);
 
-    RECT r = { 0, 0, 1280, 720 };
+    //Fluffy: Process command line arguments
+    char* levelName = 0;
+    bool high_dpi = false;
+    int resolutionX = 1280;
+    int resolutionY = 720;
+#ifdef _DEBUG
+    {
+        int i = 1;
+        int strcount = 0;
+        while (argc > i)
+        {
+            if (argv[i][0] == '-' && argv[i][1] == '-')
+            {
+                if (strcmp(argv[i], "--high-dpi") == 0)
+                    high_dpi = true;
+                else if (strcmp(argv[i], "--1pbraidstyle") == 0) {
+                    if (argc > i) {
+                        TR::options_1PbraidStyle = atoi(argv[i + 1]);
+                        i++;
+                    }
+                }
+                else if (strcmp(argv[i], "--2pbraidstyle") == 0) {
+                    if (argc > i) {
+                        TR::options_2PbraidStyle = atoi(argv[i + 1]);
+                        i++;
+                    }
+                }
+                else if (strcmp(argv[i], "--1paltcostume") == 0)
+                    TR::options_1PaltCostume = 1;
+                else if (strcmp(argv[i], "--2paltcostume") == 0)
+                    TR::options_2PaltCostume = 1;
+                else if (strcmp(argv[i], "--1pnobraid") == 0)
+                    TR::options_1PnoBraid = 1;
+                else if (strcmp(argv[i], "--2pnobraid") == 0)
+                    TR::options_2PnoBraid = 1;
+                else if (strcmp(argv[i], "--resx") == 0) {
+                    if (argc > i) {
+                        resolutionX = atoi(argv[i + 1]);
+                        i++;
+                    }
+                }
+                else if (strcmp(argv[i], "--resy") == 0) {
+                    if (argc > i) {
+                        resolutionY = atoi(argv[i + 1]);
+                        i++;
+                    }
+                }
+                else if (strcmp(argv[i], "--lookrightstick") == 0)
+                    TR::options_rightstickLook = 1;
+                else if (strcmp(argv[i], "--lookinvert") == 0)
+                    TR::options_invertLook = 1;
+                else if (strcmp(argv[i], "--unlimitedammo") == 0)
+                    TR::options_unlimitedAmmo = 1;
+                else if (strcmp(argv[i], "--friendlyfire") == 0)
+                    TR::options_friendlyFire = 1;
+            }
+            else
+            {
+                if (strcount == 0)
+                    levelName = (char *) argv[i];
+                strcount++;
+            }
+            i++;
+        }
+    }
+#else
+    if(argc > 1)
+    {
+        int pos = 0;
+        char str[1000];
+        char** strings;
+        strings = new char* [100];
+        int stringsNum = 0;
+        while (1) {
+            if (argv[1][pos] == 0 || stringsNum + 1 >= 100)
+                break;
+            memset(str, 0, 1000);
+            int strPos = 0;
+            while (1) {
+                if (argv[1][pos] != ' ') {
+                    str[strPos] = tolower(argv[1][pos]);
+                    strPos++;
+                }
+                pos++;
+                if (strPos + 1 >= 1000 || argv[1][pos] == 0 || (argv[1][pos] == ' ' && strPos)) {
+                    break;
+                }
+            }
+            strings[stringsNum] = new char[strPos + 1];
+            strcpy(strings[stringsNum], str);
+            strings[stringsNum][strPos] = 0;
+            stringsNum++;
+        }
+
+        int strcount = 0;
+        for (int i = 0; i < stringsNum; i++) {
+            char* arg = strings[i];
+            if (arg[0] == '-' && arg[1] == '-')
+            {
+                if (strcmp(arg, "--high-dpi") == 0)
+                    high_dpi = true;
+                else if (strcmp(arg, "--1pbraidstyle") == 0) {
+                    if (stringsNum > i) {
+                        TR::options_1PbraidStyle = atoi(strings[i + 1]);
+                        i++;
+                    }
+                }
+                else if (strcmp(arg, "--2pbraidstyle") == 0) {
+                    if (stringsNum > i) {
+                        TR::options_2PbraidStyle = atoi(strings[i + 1]);
+                        i++;
+                    }
+                }
+                else if (strcmp(arg, "--1paltcostume") == 0)
+                    TR::options_1PaltCostume = 1;
+                else if (strcmp(arg, "--2paltcostume") == 0)
+                    TR::options_2PaltCostume = 1;
+                else if (strcmp(arg, "--1pnobraid") == 0)
+                    TR::options_1PnoBraid = 1;
+                else if (strcmp(arg, "--2pnobraid") == 0)
+                    TR::options_2PnoBraid = 1;
+                else if (strcmp(arg, "--resx") == 0) {
+                    if (stringsNum > i) {
+                        resolutionX = atoi(strings[i + 1]);
+                        i++;
+                    }
+                }
+                else if (strcmp(arg, "--resy") == 0) {
+                    if (stringsNum > i) {
+                        resolutionY = atoi(strings[i + 1]);
+                        i++;
+                    }
+                }
+                else if (strcmp(arg, "--lookrightstick") == 0)
+                    TR::options_rightstickLook = 1;
+                else if (strcmp(arg, "--lookinvert") == 0)
+                    TR::options_invertLook = 1;
+                else if (strcmp(arg, "--unlimitedammo") == 0)
+                    TR::options_unlimitedAmmo = 1;
+                else if (strcmp(arg, "--friendlyfire") == 0)
+                    TR::options_friendlyFire = 1;
+            }
+            else
+            {
+                if (strcount == 0) {
+                    int length = strlen(arg);
+                    levelName = new char[length + 1];
+                    strcpy(levelName, arg);
+                }
+                strcount++;
+            }
+        }
+        for (int i = 0; i < stringsNum; i++) {
+            delete[]strings[i];
+        }
+        delete[]strings;
+    }
+#endif
+
+    RECT r = { 0, 0, resolutionX, resolutionY }; //Fluffy: Use resolution vars
 
     int sw = GetSystemMetrics(SM_CXSCREEN);
     int sh = GetSystemMetrics(SM_CYSCREEN);
@@ -1026,6 +1185,8 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     r.left = r.top = 0;
 #endif
 
+    //Fluffy: This is now checked above
+    /*
     // set our process to be DPI aware before creating main window
 
     bool high_dpi = false;
@@ -1034,6 +1195,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
             high_dpi = true;
         }
     }
+    */
 
     HMODULE hUser32 = NULL, hShcore = NULL;
     
@@ -1081,7 +1243,11 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
     Core::defLang = checkLanguage();
 
-    Game::init((argc > 1 && strstr(argv[1], "--") != argv[1]) ? argv[1] : NULL);
+    Game::init(levelName);
+#ifndef _DEBUG
+    if(levelName)
+        delete[]levelName;
+#endif
 
     if (Core::isQuit) {
         MessageBoxA(hWnd, "Please check the readme file first!", "Game resources not found", MB_ICONHAND);
@@ -1107,7 +1273,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
                 ContextSwap();
             }
             #ifdef _DEBUG
-                Sleep(10);
+                //Sleep(10);
             #endif
         }
     };

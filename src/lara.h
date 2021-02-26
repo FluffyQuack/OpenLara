@@ -515,6 +515,11 @@ struct Lara : Character {
         if (level->extra.laraSkin > -1)
             level->entities[entity].modelIndex = level->extra.laraSkin + 1;
 
+        //Fluffy: Check if Lara should use alt costume
+        bool is1P = game->getLara(0) == 0;
+        if(!level->isCutsceneLevel() && ((is1P && TR::options_1PaltCostume) || (!is1P && TR::options_2PaltCostume)))
+            level->entities[entity].modelIndex = level->extra.player2PmodelIndex + 1;
+
         jointChest = level->isCutsceneLevel() ? 0 : JOINT_CHEST;
         jointHead  = JOINT_HEAD;
         rangeChest = vec4(-0.50f, 0.50f, -0.95f, 0.95f) * PI;
@@ -537,8 +542,9 @@ struct Lara : Character {
 
         if (level->isHome()) {
             if (level->version & TR::VER_TR1)
-                meshSwap(1, TR::MODEL_LARA_SPEC, JOINT_MASK_UPPER | JOINT_MASK_LOWER);
-        } else {
+                meshSwap(1, TR::MODEL_LARA_SPEC + (level->entities[entity].modelIndex - 1), JOINT_MASK_UPPER | JOINT_MASK_LOWER); //Fluffy: Add in model index for potential 2P costume
+        }
+        else {
             int *wpnAmmo = game->invCount(TR::Entity::PISTOLS);
             if (wpnAmmo && *wpnAmmo > 0)
                 wpnSet(TR::Entity::PISTOLS);
@@ -549,24 +555,44 @@ struct Lara : Character {
             arms[i].rotAbs    = quat(0, 0, 0, 1);
         }
 
-        if (level->extra.braid > -1) {
+        //Fluffy: Added options into the mix to this
+        if (level->extra.braid > -1 && ((is1P && !TR::options_1PnoBraid) || (!is1P && !TR::options_2PnoBraid))) {
             vec3 offset(0.0f);
-            switch (level->version & TR::VER_VERSION) {
-                case TR::VER_TR1 :
-                    //braid[0] = new Braid(this, vec3(-4.0f, 24.0f, -48.0f)); // it's just ugly :)
+            int style = is1P ? TR::options_1PbraidStyle : TR::options_2PbraidStyle;
+            if (style == -1) {
+                switch (level->version & TR::VER_VERSION) {
+                case TR::VER_TR1:
+                    style = 1;
                     break;
-                case TR::VER_TR2 :
-                case TR::VER_TR3 :
-                    braid[0] = new Braid(this, vec3(0.0f, -23.0f, -55.0f));
+                case TR::VER_TR2:
+                    style = 2;
                     break;
-                case TR::VER_TR4 :
-                    if (isYoung()) {
-                        braid[0] = new Braid(this, vec3(-32.0f, -48.0f, -32.0f));
-                        braid[1] = new Braid(this, vec3( 32.0f, -48.0f, -32.0f));
-                    } else {
-                        braid[0] = new Braid(this, vec3(0.0f, -23.0f, -32.0f));
-                    }
+                case TR::VER_TR3:
+                    style = 3;
                     break;
+                case TR::VER_TR4:
+                    style = 4;
+                    break;
+                }
+            }
+
+            switch (style) {
+            case 1:
+                braid[0] = new Braid(this, vec3(-4.0f, 24.0f, -48.0f)); // it's just ugly :)
+                break;
+            case 2:
+            case 3:
+                braid[0] = new Braid(this, vec3(0.0f, -23.0f, -55.0f));
+                break;
+            case 4:
+                if (isYoung()) {
+                    braid[0] = new Braid(this, vec3(-32.0f, -48.0f, -32.0f));
+                    braid[1] = new Braid(this, vec3(32.0f, -48.0f, -32.0f));
+                }
+                else {
+                    braid[0] = new Braid(this, vec3(0.0f, -23.0f, -32.0f));
+                }
+                break;
             }
         }
 
@@ -721,7 +747,7 @@ struct Lara : Character {
             wpnDraw(true);
 
         if (itemHolster != TR::Entity::NONE)
-            meshSwap(1, level->extra.weapons[itemHolster], JOINT_MASK_LEG_L1 | JOINT_MASK_LEG_R1);
+            meshSwap(1, level->extra.weapons[itemHolster] + (level->entities[entity].modelIndex - 1), JOINT_MASK_LEG_L1 | JOINT_MASK_LEG_R1); //Fluffy: Add in model index for potential 2P costume
 
         if (getRoom().flags.water) {
             stand = STAND_UNDERWATER;
@@ -869,16 +895,17 @@ struct Lara : Character {
 
         // swap weapon parts
         if (wpnCurrent != TR::Entity::SHOTGUN) {
-            meshSwap(1, level->extra.weapons[wpnCurrent], mask);
+            meshSwap(1, level->extra.weapons[wpnCurrent] + (level->entities[entity].modelIndex - 1), mask); //Fluffy: Add in model index for potential 2P costume
+            
             // have a shotgun in inventory place it on the back if another weapon is in use
-            meshSwap(2, level->extra.weapons[TR::Entity::SHOTGUN], game->invCount(TR::Entity::INV_SHOTGUN) ? JOINT_MASK_CHEST : 0);
+            meshSwap(2, level->extra.weapons[TR::Entity::SHOTGUN] + (level->entities[entity].modelIndex - 1), game->invCount(TR::Entity::INV_SHOTGUN) ? JOINT_MASK_CHEST : 0); //Fluffy: Add in model index for potential 2P costume
             itemHolster = (wState == Weapon::IS_HIDDEN) ? wpnCurrent : TR::Entity::NONE;
         } else {
-            meshSwap(2, level->extra.weapons[wpnCurrent], mask);
+            meshSwap(2, level->extra.weapons[wpnCurrent] + (level->entities[entity].modelIndex - 1), mask); //Fluffy: Add in model index for potential 2P costume
         }
 
         // mesh swap to angry Lara's head while firing (from uzis model)
-        meshSwap(3, level->extra.weapons[TR::Entity::UZIS], (wState == Weapon::IS_FIRING) ? JOINT_MASK_HEAD : 0);
+        meshSwap(3, level->extra.weapons[TR::Entity::UZIS] + (level->entities[entity].modelIndex - 1), (wState == Weapon::IS_FIRING) ? JOINT_MASK_HEAD : 0); //Fluffy: Add in model index for potential 2P costume
 
         wpnState = wState;
     }
@@ -1071,7 +1098,7 @@ struct Lara : Character {
             }
             Arm *arm = &arms[armIndex];
 
-            if (wpnAmmo && *wpnAmmo != UNLIMITED_AMMO) {
+            if (wpnAmmo && *wpnAmmo != UNLIMITED_AMMO && TR::options_unlimitedAmmo == 0) { //Fluffy
                 if (*wpnAmmo <= 0)
                     continue;
                 if (wpnCurrent != TR::Entity::SHOTGUN)
@@ -1094,7 +1121,12 @@ struct Lara : Character {
             if (arm->target && checkHit(arm->target, p, hit, hit)) {
                 hits++;
                 TR::Entity::Type type = arm->target->getEntity().type;
-                ((Character*)arm->target)->hit(wpnGetDamage(), this);
+
+                float damage = wpnGetDamage();
+                if (arm->target->getEntity().isLara()) //If we're shooting at another player, drastically increase the damage as Lara has a lot of health compared to enemies
+                    damage *= 33;
+
+                ((Character*)arm->target)->hit(damage, this);
                 hit -= d * 64.0f;
                 if (type != TR::Entity::SCION_TARGET)
                     game->addEntity(TR::Entity::BLOOD, room, hit);
@@ -1117,7 +1149,7 @@ struct Lara : Character {
             if (shots != hits)
                 game->playSound(TR::SND_RICOCHET, nearPos, Sound::PAN);
 
-             if (wpnAmmo && *wpnAmmo != UNLIMITED_AMMO && wpnCurrent == TR::Entity::SHOTGUN)
+             if (wpnAmmo && *wpnAmmo != UNLIMITED_AMMO && wpnCurrent == TR::Entity::SHOTGUN && TR::options_unlimitedAmmo == 0) //Fluffy
                 *wpnAmmo -= 1;
         }
     }
@@ -1301,7 +1333,7 @@ struct Lara : Character {
         updateTargets();
 
         Controller *lookTarget = canLookAt() ? target : NULL;
-        if (camera->mode == Camera::MODE_LOOK) {
+        if (camera->mode == Camera::MODE_LOOK || (TR::options_rightstickLook && (camera->lookAngle.x < -0.001 || camera->lookAngle.x > 0.001 || camera->lookAngle.y < -0.001 || camera->lookAngle.y > 0.001))) { //Fluffy: If options_rightstickLook is true, then Lara should always look towards targetAngle (assuming targetangle isn't zero)
             vec3 p = pos + vec3(camera->targetAngle.x, camera->targetAngle.y) * 8192.0f;
             Character::lookAtPos(&p);
         } else
@@ -1480,7 +1512,7 @@ struct Lara : Character {
 
         Controller *c = Controller::first;
         do {
-            if (!c->getEntity().isEnemy())
+            if (!(c->getEntity().isEnemy() || (c->getEntity().isLara() && TR::options_friendlyFire == 1))) //Fluffy: If friendly fire is true, then we allow Lara to target Lara
                 continue;
 
             Character *enemy = (Character*)c;
@@ -1567,7 +1599,7 @@ struct Lara : Character {
             mask = (layers[1].mask & ~mask) | (right ? JOINT_MASK_LEG_R1 : JOINT_MASK_LEG_L1); // holster
         else
             mask |= layers[1].mask;
-        meshSwap(1, level->extra.weapons[wpnCurrent], mask);
+        meshSwap(1, level->extra.weapons[wpnCurrent] + (level->entities[entity].modelIndex - 1), mask); //Fluffy: Add in model index for potential 2P costume
     }
 
     void doBubbles() {
@@ -1669,9 +1701,9 @@ struct Lara : Character {
                 pos   = enemy->pos;
                 angle = enemy->angle;
 
-                meshSwap(1, TR::MODEL_LARA_SPEC, JOINT_MASK_UPPER | JOINT_MASK_LOWER);
-                meshSwap(2, level->extra.weapons[TR::Entity::SHOTGUN], 0);
-                meshSwap(3, level->extra.weapons[TR::Entity::UZIS],    0);
+                meshSwap(1, TR::MODEL_LARA_SPEC + (level->entities[entity].modelIndex - 1), JOINT_MASK_UPPER | JOINT_MASK_LOWER); //Fluffy: Add in model index for potential 2P costume
+                meshSwap(2, level->extra.weapons[TR::Entity::SHOTGUN] + (level->entities[entity].modelIndex - 1), 0); //Fluffy: Add in model index for potential 2P costume
+                meshSwap(3, level->extra.weapons[TR::Entity::UZIS] + (level->entities[entity].modelIndex - 1),    0); //Fluffy: Add in model index for potential 2P costume
 
                 animation.setAnim(level->models[TR::MODEL_LARA_SPEC].animation + 1);
                 break;
@@ -3052,6 +3084,7 @@ struct Lara : Character {
         if (Input::state[pid][cAction])    input |= ACTION;
         if (Input::state[pid][cWeapon])    input |= WEAPON;
         if (Input::state[pid][cLook] && canLookAt()) input = LOOK;
+        if (Input::state[pid][cDuck])    input |= YELL; //Fluffy
         //if (Input::state[pid][cStepRight]) input  = WALK  | RIGHT;
         //if (Input::state[pid][cStepLeft])  input  = WALK  | LEFT;
 
@@ -3250,6 +3283,9 @@ struct Lara : Character {
     virtual void update() {
         if (Input::state[camera->cameraIndex][cLook] && Input::lastState[camera->cameraIndex] == cAction)
             camera->changeView(!camera->firstPerson);
+
+        if (input & YELL)
+            game->playSound(TR::SND_SCREAM, pos, Sound::PAN | Sound::UNIQUE); //Fluffy
 
         if (level->isCutsceneLevel()) {
             updateAnimation(true);
